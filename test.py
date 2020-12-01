@@ -1,32 +1,27 @@
 
 class CSVfile() : #creazione della classe#
 
-    def __init__(self, name, start, end):
+    def __init__(self, name):
         self.name = name
-        self.start = start
-        self.end = end
-        
+        self.num_lines = 0
+        self.tot = 0.0
 
         if not type(name) == str:
             raise Exception('non e una stringa')
 
 
-    def count(self, name):
-        num_lines = sum(1 for line in open(self.name))
-        return num_lines
+    def count(self):
+        self.num_lines = sum(1 for line in open(self.name))
+        return self.num_lines
 
-        self.lines = num_lines
         
-
-
-    def get_data(self, num_lines, start=None, end=None):
+    def get_data(self, start = None, end = None):
 
         if not type(start) == int and type(end) == int: 
             raise Exception('non sono righe')
 
-        if not end < num_lines:
+        if end > self.num_lines:
             raise Exception('non ci sono abbastanza righe')
-
 
         values = []   
         try:
@@ -36,9 +31,7 @@ class CSVfile() : #creazione della classe#
             return None
 
         lines = my_file.readlines()
-        linesf = lines[self.start:self.end]
-
-
+        linesf = lines[start:end]
 
         for line in linesf :
             elements = line.split(',')          
@@ -54,15 +47,23 @@ class CSVfile() : #creazione della classe#
         my_file.close()               
         return values
 
-        def total(values):   
-            total = 0
-            for item in values:
-                total += item 
-            return total
+    
+    def total(self, values):   
+        self.tot = sum(values)
+        return self.tot
 
 
-mio_file = CSVfile(name = 'shampoo_sales.csv', start = 8 ,end = 59) #inizializzazione
-print('Nome del file: "{}"\n'.format(mio_file.name))
-print('Numero righe: "{}"\n'.format(mio_file.count(mio_file.name)))
-print('\nDati contenuti nel file: "{}"'.format(mio_file.get_data(mio_file.num_lines)))
-print("Totale: {}".format(mio_file.total(mio_file.values)))
+        
+
+
+
+# corpo principale dello script
+mio_file = CSVfile(name = 'shampoo_sales.csv') #inizializzazione
+mio_file.count() # conto righe
+
+#print('Nome del file: "{}"\n'.format(mio_file.name))
+print('Numero righe: "{}"\n'.format(mio_file.count()))
+#print('\nDati contenuti nel file: "{}"'.format(mio_file.get_data(start = 8, end = 27)))
+
+lista = mio_file.get_data(start = 8, end = 27)
+print(mio_file.total(lista))
